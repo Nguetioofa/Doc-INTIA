@@ -1,3 +1,6 @@
 <Solution>
+  <Project Path="AntiaApp.Data/AntiaApp.Data.csproj" />
+  <Project Path="AntiaApp.Domain/AntiaApp.Domain.csproj" />
+  <Project Path="AntiaApp.Services/AntiaApp.Services.csproj" />
   <Project Path="AntiaApp.Web/AntiaApp.Web.csproj" />
 </Solution>
