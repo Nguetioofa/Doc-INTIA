@@ -13,6 +13,7 @@ builder.Services.AddDbContext<AntiaAppDbContext>(option =>
 }, ServiceLifetime.Scoped);
 
 builder.Services.AddScoped<ISiteService, SiteService>();
+builder.Services.AddScoped<IClientService, ClientService>();
 
 
 var app = builder.Build();
