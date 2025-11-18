@@ -1,7 +1,19 @@
+using Microsoft.EntityFrameworkCore;
+using AntiaApp.Data.Entities;
+using AntiaApp.Services.DBServices;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<AntiaAppDbContext>(option =>
+{
+    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+}, ServiceLifetime.Scoped);
+
+builder.Services.AddScoped<ISiteService, SiteService>();
+
 
 var app = builder.Build();
 

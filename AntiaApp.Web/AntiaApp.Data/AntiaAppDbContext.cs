@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using AntiaApp.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace AntiaApp.Domain.Entities;
+namespace AntiaApp.Data.Entities;
 
 public partial class AntiaAppDbContext : DbContext
 {
