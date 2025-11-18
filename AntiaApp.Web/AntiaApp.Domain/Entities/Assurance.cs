@@ -25,5 +25,5 @@ public partial class Assurance
 
     public DateTime? DateModification { get; set; }
 
-    public virtual Client Client { get; set; } = null!;
+    public virtual Client? Client { get; set; }
 }
