@@ -14,10 +14,12 @@ namespace AntiaApp.Web.Controllers
     public class SitesController : Controller
     {
         private readonly ISiteService _service;
+        private readonly LogManager _log;
 
-        public SitesController(ISiteService siteService)
+        public SitesController(ISiteService siteService, LogManager log)
         {
             _service = siteService;
+            _log = log;
         }
 
         // GET: Sites
@@ -59,7 +61,7 @@ namespace AntiaApp.Web.Controllers
             if (ModelState.IsValid)
             {
                 await _service.Add(site);
-
+                _log.Info("New site", typeof(SitesController).Name, nameof(Create), site);
                 return RedirectToAction(nameof(Index));
             }
             return View(site);
@@ -99,16 +101,10 @@ namespace AntiaApp.Web.Controllers
                 {
                     await _service.Update(site);
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException ex)
                 {
-                    if (!_service.Exists(id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    _log.Critical(ex.Message, typeof(SitesController).Name, nameof(Edit), ex.StackTrace, site.Id);
+                    throw;
                 }
                 return RedirectToAction(nameof(Index));
             }

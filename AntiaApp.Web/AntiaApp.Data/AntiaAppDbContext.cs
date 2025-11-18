@@ -20,6 +20,8 @@ public partial class AntiaAppDbContext : DbContext
 
     public virtual DbSet<Client> Clients { get; set; }
 
+    public virtual DbSet<Log> Logs { get; set; }
+
     public virtual DbSet<Site> Sites { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
@@ -53,6 +55,16 @@ public partial class AntiaAppDbContext : DbContext
                 .HasForeignKey(d => d.SiteId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Clients_Sites");
+        });
+
+        modelBuilder.Entity<Log>(entity =>
+        {
+            entity.ToTable("Log");
+
+            entity.Property(e => e.ClassName).HasMaxLength(100);
+            entity.Property(e => e.Level).HasMaxLength(20);
+            entity.Property(e => e.MehodName).HasMaxLength(100);
+            entity.Property(e => e.Message).HasMaxLength(300);
         });
 
         modelBuilder.Entity<Site>(entity =>

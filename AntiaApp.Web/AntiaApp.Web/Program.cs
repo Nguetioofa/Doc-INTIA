@@ -14,7 +14,7 @@ builder.Services.AddDbContext<AntiaAppDbContext>(option =>
 
 builder.Services.AddScoped<ISiteService, SiteService>();
 builder.Services.AddScoped<IClientService, ClientService>();
-
+builder.Services.AddScoped<LogManager>();
 
 var app = builder.Build();
 

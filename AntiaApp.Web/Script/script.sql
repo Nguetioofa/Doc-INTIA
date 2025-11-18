@@ -54,6 +54,21 @@ CREATE TABLE Assurances
 );
 GO
 
+
+CREATE TABLE Log
+(
+    Id INT IDENTITY(1,1) NOT NULL,
+    Level NVARCHAR(20) NOT NULL,
+    MehodName NVARCHAR(100) NOT NULL,
+    ClassName NVARCHAR(100) NOT null,
+    Message NVARCHAR(300) NULL,
+    StackTrace NVARCHAR(MAX) NULL,
+    Data NVARCHAR(MAX) NULL,
+    CONSTRAINT PK_Log PRIMARY KEY (Id)
+);
+GO
+
+
 INSERT INTO Sites (Nom, Ville, Adresse, Telephone)
 VALUES 
     ('Direction Generale', 'Yaounde', '-', '696999999'),

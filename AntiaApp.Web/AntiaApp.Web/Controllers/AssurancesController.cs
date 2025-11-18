@@ -1,22 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AntiaApp.Data.Entities;
+using AntiaApp.Domain.Entities;
+using AntiaApp.Services.DBServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AntiaApp.Data.Entities;
-using AntiaApp.Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Policy;
+using System.Threading.Tasks;
 
 namespace AntiaApp.Web.Controllers
 {
     public class AssurancesController : Controller
     {
         private readonly AntiaAppDbContext _context;
+        private readonly LogManager _log;
 
-        public AssurancesController(AntiaAppDbContext context)
+        public AssurancesController(AntiaAppDbContext context, LogManager log)
         {
             _context = context;
+            _log = log;
         }
 
         // GET: Assurances
@@ -61,6 +65,8 @@ namespace AntiaApp.Web.Controllers
             {
                 _context.Add(assurance);
                 await _context.SaveChangesAsync();
+                _log.Info("New Assurance", typeof(AssurancesController).Name, nameof(Create), assurance);
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Nom", assurance.ClientId);
@@ -101,16 +107,12 @@ namespace AntiaApp.Web.Controllers
                     _context.Update(assurance);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException ex)
                 {
-                    if (!AssuranceExists(assurance.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    _log.Critical(ex.Message, typeof(ClientsController).Name, nameof(Edit), ex.StackTrace, assurance);
+
+                    throw;
+                    
                 }
                 return RedirectToAction(nameof(Index));
             }

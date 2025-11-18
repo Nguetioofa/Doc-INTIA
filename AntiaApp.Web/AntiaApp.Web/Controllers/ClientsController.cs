@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Threading.Tasks;
 
 namespace AntiaApp.Web.Controllers
@@ -16,11 +17,13 @@ namespace AntiaApp.Web.Controllers
     {
         private readonly IClientService _service;
         private readonly ISiteService _siteService;
+        private readonly LogManager _log;
 
-        public ClientsController(IClientService clientService, ISiteService siteService)
+        public ClientsController(IClientService clientService, ISiteService siteService, LogManager log)
         {
             _service = clientService;
             _siteService = siteService;
+            _log = log;
         }
 
         // GET: Clients
@@ -134,16 +137,12 @@ namespace AntiaApp.Web.Controllers
 
                     await _service.Update(client);
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException ex)
                 {
-                    if (!_service.Exists(id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    _log.Critical(ex.Message, typeof(ClientsController).Name, nameof(Edit), ex.StackTrace, vm);
+
+                    throw;
+                    
                 }
                 return RedirectToAction(nameof(Index));
             }
